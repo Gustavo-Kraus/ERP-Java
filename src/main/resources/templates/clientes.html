@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ERP | Clientes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body class="dashboard-layout">
+<input type="checkbox" id="client-drawer-toggle" class="drawer-toggle">
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <strong>ERP</strong>
+        <span>Sistema interno</span>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a th:href="@{/main}" class="nav-item">Painel principal</a>
+        <a th:href="@{/clientes}" class="nav-item active">Clientes</a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <form th:action="@{/logout}" method="post">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+            <button type="submit">Sair</button>
+        </form>
+    </div>
+</aside>
+
+<div class="main-wrapper">
+    <header class="top-header page-header">
+        <div>
+            <span>Cadastro</span>
+            <h1>Clientes</h1>
+        </div>
+    </header>
+
+    <main class="content-area clients-page">
+        <div th:if="${success}" class="message success" th:text="${success}"></div>
+        <div th:if="${error}" class="message error" th:text="${error}"></div>
+
+        <section class="table-panel">
+            <div class="table-toolbar">
+                <div class="section-title">
+                    <span>Consulta</span>
+                    <h2>Clientes cadastrados</h2>
+                </div>
+
+                <form class="toolbar-controls" th:action="@{/clientes}" method="get">
+                    <input type="search" name="busca" placeholder="Buscar por nome, email" th:value="${busca}">
+                    <button type="submit" class="primary-action">Buscar</button>
+                    <a th:href="@{/clientes}" class="secondary-link">Limpar</a>
+                </form>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>CPF/CNPJ</th>
+                        <th>Telefone</th>
+                        <th>Endereco</th>
+                        <th>Contas em aberto</th>
+                        <th>Acoes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(clientes)}">
+                        <td colspan="6" class="empty-state">Nenhum cliente encontrado.</td>
+                    </tr>
+                    <tr th:each="cliente : ${clientes}">
+                        <td>
+                            <strong th:text="${#strings.isEmpty(cliente.nome) ? (#strings.isEmpty(cliente.razaoSocial) ? 'Sem nome' : cliente.razaoSocial) : cliente.nome}">Cliente</strong>
+                            <span th:text="${#strings.isEmpty(cliente.email) ? 'Sem email' : cliente.email}">email@empresa.com</span>
+                        </td>
+                        <td th:text="${#strings.isEmpty(cliente.cnpjCpf) ? '-' : cliente.cnpjCpf}">-</td>
+                        <td>
+                            <strong th:text="${#strings.isEmpty(cliente.telefone) ? (#strings.isEmpty(cliente.celular) ? '-' : cliente.celular) : cliente.telefone}">-</strong>
+                            <span th:if="${cliente.telefone != null && cliente.celular != null}" th:text="${cliente.celular}">-</span>
+                        </td>
+                        <td>
+                            <strong th:text="${#strings.isEmpty(cliente.rua) ? '-' : cliente.rua}">-</strong>
+                            <span th:text="${#strings.isEmpty(cliente.bairro) ? (#strings.isEmpty(cliente.cep) ? '' : cliente.cep) : cliente.bairro}"></span>
+                        </td>
+                        <td><span class="status-badge pending">Em breve</span></td>
+                        <td>
+                            <div class="row-actions">
+                                <button type="button"
+                                        class="table-action edit-action"
+                                        th:data-action="@{/clientes/editar/{id}(id=${cliente.id})}"
+                                        th:data-nome="${cliente.nome}"
+                                        th:data-nome-fantasia="${cliente.nomeFantasia}"
+                                        th:data-razao-social="${cliente.razaoSocial}"
+                                        th:data-cnpj-cpf="${cliente.cnpjCpf}"
+                                        th:data-email="${cliente.email}"
+                                        th:data-telefone="${cliente.telefone}"
+                                        th:data-celular="${cliente.celular}"
+                                        th:data-cep="${cliente.cep}"
+                                        th:data-rua="${cliente.rua}"
+                                        th:data-bairro="${cliente.bairro}"
+                                        th:data-numero-casa="${cliente.numeroCasa}">
+                                    Editar
+                                </button>
+                                <form class="delete-client-form"
+                                      th:action="@{/clientes/excluir/{id}(id=${cliente.id})}"
+                                      method="post"
+                                      onsubmit="return confirm('Excluir este cliente?');">
+                                    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                                    <button type="submit" class="table-action delete-action">Excluir</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<label for="client-drawer-toggle" class="drawer-backdrop" aria-label="Fechar cadastro"></label>
+<label for="client-drawer-toggle" class="floating-create-button" id="new-client-button">Novo cliente</label>
+
+<aside class="create-drawer" aria-label="Cadastro de cliente">
+    <div class="drawer-header">
+        <div class="section-title">
+            <span id="drawer-mode-label">Dados cadastrais</span>
+            <h2 id="drawer-title">Criar cliente</h2>
+        </div>
+        <label for="client-drawer-toggle" class="drawer-close" aria-label="Fechar cadastro">x</label>
+    </div>
+
+    <form th:action="@{/clientes/salvar}" method="post" id="client-form" data-create-action="/clientes/salvar">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+        <div class="form-grid drawer-form-grid">
+            <div class="form-group wide">
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" name="nome" placeholder="Ex: Mercado Central" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nomeFantasia">Nome fantasia</label>
+                <input type="text" id="nomeFantasia" name="nomeFantasia" placeholder="Ex: Central">
+            </div>
+
+            <div class="form-group">
+                <label for="razaoSocial">Razao social</label>
+                <input type="text" id="razaoSocial" name="razaoSocial" placeholder="Ex: Mercado Central LTDA">
+            </div>
+
+            <div class="form-group">
+                <label for="cnpjCpf">CPF/CNPJ</label>
+                <input type="text" id="cnpjCpf" name="cnpjCpf" placeholder="00.000.000/0000-00">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="cliente@empresa.com">
+            </div>
+
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+                <input type="tel" id="telefone" name="telefone" placeholder="(00) 0000-0000">
+            </div>
+
+            <div class="form-group">
+                <label for="celular">Celular</label>
+                <input type="tel" id="celular" name="celular" placeholder="(00) 00000-0000">
+            </div>
+
+            <div class="form-group">
+                <label for="cep">CEP</label>
+                <input type="text" id="cep" name="cep" placeholder="00000-000">
+            </div>
+
+            <div class="form-group">
+                <label for="rua">Rua</label>
+                <input type="text" id="rua" name="rua" placeholder="Rua ou avenida">
+            </div>
+
+            <div class="form-group">
+                <label for="bairro">Bairro</label>
+                <input type="text" id="bairro" name="bairro" placeholder="Bairro">
+            </div>
+
+            <div class="form-group">
+                <label for="numeroCasa">Numero</label>
+                <input type="text" id="numeroCasa" name="numeroCasa" placeholder="123">
+            </div>
+        </div>
+
+        <div class="form-actions drawer-actions">
+            <button type="reset" class="secondary-action">Limpar</button>
+            <button type="submit" class="primary-action" id="drawer-submit">Salvar cliente</button>
+        </div>
+    </form>
+</aside>
+
+<script>
+    const drawerToggle = document.getElementById('client-drawer-toggle');
+    const newClientButton = document.getElementById('new-client-button');
+    const clientForm = document.getElementById('client-form');
+    const drawerModeLabel = document.getElementById('drawer-mode-label');
+    const drawerTitle = document.getElementById('drawer-title');
+    const drawerSubmit = document.getElementById('drawer-submit');
+    const fields = [
+        'nome',
+        'nomeFantasia',
+        'razaoSocial',
+        'cnpjCpf',
+        'email',
+        'telefone',
+        'celular',
+        'cep',
+        'rua',
+        'bairro',
+        'numeroCasa'
+    ];
+
+    function setCreateMode() {
+        clientForm.action = clientForm.dataset.createAction;
+        clientForm.reset();
+        drawerModeLabel.textContent = 'Dados cadastrais';
+        drawerTitle.textContent = 'Criar cliente';
+        drawerSubmit.textContent = 'Salvar cliente';
+    }
+
+    newClientButton.addEventListener('click', setCreateMode);
+
+    document.querySelectorAll('.edit-action').forEach(button => {
+        button.addEventListener('click', () => {
+            clientForm.action = button.dataset.action;
+            fields.forEach(field => {
+                document.getElementById(field).value = button.dataset[field] || '';
+            });
+            drawerModeLabel.textContent = 'Edicao';
+            drawerTitle.textContent = 'Editar cliente';
+            drawerSubmit.textContent = 'Salvar alteracoes';
+            drawerToggle.checked = true;
+        });
+    });
+</script>
+</body>
+</html>

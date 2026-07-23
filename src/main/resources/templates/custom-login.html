@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | ERP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body class="auth-page">
+<main class="auth-container">
+    <section class="auth-card">
+        <div class="login-brand">
+            <strong>ERP</strong>
+            <span>Acesso ao sistema</span>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+            <div class="form-group">
+                <label for="username">Email</label>
+                <input type="email" id="username" name="username" required autocomplete="username" placeholder="usuario@empresa.com">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Digite sua senha">
+            </div>
+
+            <button type="submit" class="btn-primary">Entrar</button>
+        </form>
+
+        <div class="line-divider">
+            <span></span>
+            <small>ou</small>
+            <span></span>
+        </div>
+
+        <form th:action="@{/oauth2/authorization/google}" method="get">
+            <button type="submit" class="btn-google">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.7 1.22 9.2 3.6l6.9-6.9C35.9 2.3 30.3 0 24 0 14.6 0 6.6 5.4 2.6 13.3l8.1 6.3C12.5 13.3 17.8 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.1 24.5c0-1.7-.1-2.9-.4-4.2H24v8h12.6c-.3 2-1.6 5-4.6 7l7.2 5.6c4.2-3.9 6.9-9.6 6.9-16.4z"/>
+                    <path fill="#FBBC05" d="M10.7 28.4c-1-2.9-1-6 0-8.9l-8.1-6.3C.9 17 0 20.4 0 24s.9 7 2.6 10.8l8.1-6.4z"/>
+                    <path fill="#34A853" d="M24 48c6.5 0 12-2.1 16-5.8l-7.2-5.6c-2 1.4-4.7 2.4-8.8 2.4-6.2 0-11.5-3.8-13.3-9.1l-8.1 6.3C6.6 42.6 14.6 48 24 48z"/>
+                </svg>
+                <span>Entrar com Google</span>
+            </button>
+        </form>
+
+        <div th:if="${param.error}" class="message error">Credenciais invalidas.</div>
+        <div th:if="${param.logout}" class="message success">Sessao encerrada.</div>
+    </section>
+</main>
+</body>
+</html>

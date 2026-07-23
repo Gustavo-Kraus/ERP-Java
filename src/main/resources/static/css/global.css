@@ -1,0 +1,99 @@
+/**
+ * GLOBAL.CSS
+ * Responsável pelas variáveis de cores, reset de margens, tipografia padrão 
+ * e elementos globais (inputs, botões e mensagens de alerta).
+ */
+
+:root {
+    /* Cores da Marca */
+    --primary: #ff0000;        /* Vermelho principal */
+    --primary-dark: #cc0000;   /* Vermelho escuro para hover */
+    
+    /* Escala de Cinzas (Fundo e Cards) */
+    --bg-main: #121212;        /* Fundo principal da página (quase preto) #0a0a0a */
+    --bg-sidebar: #1E1E1E;     /* Fundo do menu lateral #141414 */
+    --bg-card: #1E1E1E;        /* Fundo dos painéis e cards #141414 */
+    --border: #2a2a2a;         /* Cor das bordas e divisórias */
+
+    /* Tipografia */
+    --text-main: #ffffff;      /* Texto principal (Branco) */
+    --text-muted: #a3a3a3;     /* Texto secundário (Cinza claro) */
+    --text-dark: #1a1a1a;      /* Texto escuro (usado em botões claros) */
+}
+
+/* Reset básico para garantir que navegadores não baguncem o layout */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-main);
+    background-color: var(--bg-main);
+    min-height: 100vh;
+}
+
+/* =========================================
+   FORMULÁRIOS E INPUTS GLOBAIS
+   ========================================= */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    border-radius: 6px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-group input::placeholder {
+    color: #4b5563;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.2);
+    background-color: #000000;
+}
+
+/* =========================================
+   MENSAGENS DE FEEDBACK (Sucesso/Erro)
+   ========================================= */
+.message {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.message.success {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #86efac;
+    border-left: 4px solid #22c55e;
+}
+
+.message.error {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+    border-left: 4px solid #ef4444;
+}
