@@ -1,6 +1,6 @@
 package dev.kraus.ERP.Model.Filial;
 
-import dev.kraus.ERP.Model.Endereco;
+import dev.kraus.ERP.Model.Endereco.Endereco;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -54,7 +54,7 @@ public class Filiais {
 
     private LocalDateTime atualizadoEm;
 
-    @Embedded
+    @ManyToOne
     private Endereco endereco;
 
     private String regimeTributario;

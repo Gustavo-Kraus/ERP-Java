@@ -106,7 +106,7 @@ public class Produtos {
 
         private LocalDateTime atualizadoEm;
 
-        private LocalDateTime desativoEm;
+        private LocalDateTime desativadoEm;
 
         @Column(precision = 10, scale = 3)
         private BigDecimal pesoLiquido;

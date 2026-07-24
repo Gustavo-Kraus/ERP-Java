@@ -1,10 +1,13 @@
-package dev.kraus.ERP.Model;
+package dev.kraus.ERP.Model.Endereco;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 
-@Embeddable
+@Entity
 public class Endereco {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(length = 8)
     private String cep;
