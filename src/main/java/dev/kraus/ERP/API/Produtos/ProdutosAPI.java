@@ -4,7 +4,7 @@ package dev.kraus.ERP.API.Produtos;
 import dev.kraus.ERP.DTO.Produtos.ProdutoRequest;
 import dev.kraus.ERP.Model.Produtos.Produtos;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
-import dev.kraus.ERP.Service.Produtos.ProdutosService;
+import dev.kraus.ERP.Service.Produtos.ProdutosServiceAPI;
 import dev.kraus.ERP.Service.Usuarios.UsuariosService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,14 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/produtos")
 public class ProdutosAPI {
 
-    private final ProdutosService produtosService;
+    private final ProdutosServiceAPI produtosServiceApi;
     private final UsuariosService usuariosService;
 
-    public ProdutosAPI(
-            ProdutosService produtosService,
-            UsuariosService usuariosService
-    ) {
-        this.produtosService = produtosService;
+    public ProdutosAPI(ProdutosServiceAPI produtosServiceApi, UsuariosService usuariosService) {
+        this.produtosServiceApi = produtosServiceApi;
         this.usuariosService = usuariosService;
     }
 
@@ -32,27 +29,15 @@ public class ProdutosAPI {
             @RequestParam("senha") String senha,
             @RequestParam("busca") String busca
     ) {
-        if (!"gu".equals(usuario) || !"123".equals(senha)) {
-            return ResponseEntity.status(401).body("Credenciais invalidas");
-        }
-
-
-
         return ResponseEntity.ok()
-                .body(produtosService.listarProdutos(busca));
+                .body(produtosServiceApi.listarProdutos(busca, usuario, senha));
     }
 
     @PostMapping("/salvar")
     public ResponseEntity<?> salvar(
-            @RequestParam("usuario") String usuario,
-            @RequestParam("senha") String senha,
             @RequestBody ProdutoRequest request
     ){
-        if (!"gu".equals(usuario) || !"123".equals(senha)) {
-            return ResponseEntity.status(401).body("Credenciais invalidas");
-        }
-
-        Produtos produto = produtosService.salvarProdutoAPI(request);
+        Produtos produto = produtosServiceApi.salvarProduto(request);
 
         return ResponseEntity.ok(produto);
     }
@@ -63,11 +48,7 @@ public class ProdutosAPI {
             @RequestParam("senha") String senha,
             @PathVariable Long id
     ){
-        if (!"gu".equals(usuario) || !"123".equals(senha)) {
-            return ResponseEntity.status(401).body("Credenciais invalidas");
-        }
-
-        produtosService.deletarProdutos(id);
+        produtosServiceApi.deletarProdutos(id, usuario, senha);
 
         return ResponseEntity.ok().body("Produto apagado com sucesso");
     }

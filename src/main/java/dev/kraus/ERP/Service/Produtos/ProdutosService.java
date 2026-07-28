@@ -38,37 +38,6 @@ public class ProdutosService {
         return produtosRepository.buscarAtivos(busca.trim(), limite);
     }
 
-    public Produtos salvarProdutoAPI(
-            ProdutoRequest request
-    ){
-
-        Produtos produto = mapper.toEntity(request);
-
-        if (produtosRepository.existsByCodigoOrCodigoBarras(produto.getCodigo(), produto.getCodigoBarras())) {
-            throw new RuntimeException("Produto já cadastrado");
-        }
-
-        if (produto.getCodigo() == null || produto.getCodigo().isBlank()) {
-            throw new RuntimeException("Código do produto é obrigatório");
-        }
-
-        if (produto.getNome() == null || produto.getNome().isBlank()) {
-            throw new RuntimeException("Nome do produto é obrigatório");
-        }
-
-        if (produto.getUnidadeMedida() == null) {
-            throw new RuntimeException("Unidade de medida do produto é obrigatória, sendo elas: UNIDADE, METRO, QUILOGRAMA");
-        }
-
-        if (produto.getTipoProduto() == null) {
-            throw new RuntimeException("Tipo do produto é obrigatório, sendo elas: PRODUTO, SERVICO, MATERIA_PRIMA, PRODUTO_ACABADO, CONSUMO_INTERNO");
-        }
-
-        produto.setAtivo(true);
-        produto.setCriadoEm(LocalDateTime.now());
-
-        return produtosRepository.save(produto);
-    }
 
     public Produtos deletarProdutos(Long id){
         Produtos produtos = produtosRepository.findById(id)

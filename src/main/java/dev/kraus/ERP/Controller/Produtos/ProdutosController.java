@@ -40,11 +40,11 @@ public class ProdutosController {
         Usuarios usuario = getUsuarioAutenticado(authentication);
         try {
             produtosService.salvarProdutosInterno(produtos, usuario);
-            redirectAttributes.addFlashAttribute("success", "Cliente cadastrado com sucesso.");
-            return "redirect:/clientes";
+            redirectAttributes.addFlashAttribute("success", "Produto cadastrado com sucesso.");
+            return "redirect:/produtos";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/clientes";
+            return "redirect:/produtos";
         }
     }
 
