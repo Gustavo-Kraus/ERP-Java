@@ -4,6 +4,8 @@ import dev.kraus.ERP.DTO.Produtos.ProdutoRequest;
 import dev.kraus.ERP.Mapper.Produtos.ProdutoMapper;
 import dev.kraus.ERP.Model.Produtos.Produtos;
 import dev.kraus.ERP.Repository.Produtos.ProdutosRepository;
+import dev.kraus.ERP.Repository.Usuarios.UsuariosRepository;
+import dev.kraus.ERP.Service.Usuarios.UsuariosService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,14 +18,20 @@ public class ProdutosServiceAPI {
 
     private final ProdutosRepository produtosRepository;
     private final ProdutoMapper mapper;
+    private final UsuariosService usuariosService;
+    private final UsuariosRepository usuariosRepository;
 
-    public ProdutosServiceAPI(ProdutosRepository produtosRepository, ProdutoMapper mapper) {
+
+    public ProdutosServiceAPI(ProdutosRepository produtosRepository, ProdutoMapper mapper, UsuariosService usuariosService, UsuariosRepository usuariosRepository) {
         this.produtosRepository = produtosRepository;
         this.mapper = mapper;
+        this.usuariosService = usuariosService;
+        this.usuariosRepository = usuariosRepository;
     }
 
     public List<Produtos> listarProdutos(String busca, String usuario, String senha){
         Pageable limite = PageRequest.of(0, 6);
+
 
 
         if (!"gu".equals(usuario) || !"123".equals(senha)) {

@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Table(name = "produtos")
 public class Produtos {
 
-    @Id
+        @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
