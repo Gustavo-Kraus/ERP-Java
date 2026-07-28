@@ -1,0 +1,9 @@
+INSERT INTO usuarios (nome, email, senha, role, criado_em, excluido_em)
+VALUES (
+  'Usuario Teste',
+  'teste@teste.com',
+  '$2a$10$0/24UwZevKMyeLi9RvcJSOwtGQ9unQK3CxMcnTAKSrAOtqI3jO1C6',
+  'USER',
+  NOW(),
+  NULL
+);
