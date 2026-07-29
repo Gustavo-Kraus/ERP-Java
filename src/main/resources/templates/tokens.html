@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ERP | Tokens API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body class="dashboard-layout">
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <strong>ERP</strong>
+        <span>Sistema interno</span>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a th:href="@{/main}" class="nav-item">Painel principal</a>
+        <a th:href="@{/clientes}" class="nav-item">Clientes</a>
+        <a th:href="@{/tokens}" class="nav-item active">Tokens API</a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <form th:action="@{/logout}" method="post">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+            <button type="submit">Sair</button>
+        </form>
+    </div>
+</aside>
+
+<div class="main-wrapper">
+    <header class="top-header">
+        <h1>Tokens API</h1>
+    </header>
+
+    <main class="content-area">
+        <section class="workspace-panel">
+            <form th:action="@{/tokens/gerar}" method="post">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                <button type="submit">Gerar token</button>
+            </form>
+
+            <div th:if="${tokenCriado}">
+                <h2>Token criado</h2>
+                <p th:text="${tokenCriado}"></p>
+            </div>
+
+            <h2>Tokens existentes</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Token</th>
+                    <th>Criado em</th>
+                    <th>Revogado em</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="token : ${tokens}">
+                    <td th:text="${token.id}"></td>
+                    <td th:text="${token.token}"></td>
+                    <td th:text="${token.criadoEm}"></td>
+                    <td th:text="${token.revogadoEm} ?: '-'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+</body>
+</html>

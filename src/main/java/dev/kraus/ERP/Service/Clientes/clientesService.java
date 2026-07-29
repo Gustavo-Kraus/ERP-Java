@@ -2,7 +2,7 @@ package dev.kraus.ERP.Service.Clientes;
 
 
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
-import dev.kraus.ERP.Repository.Clientes.clientesRepository;
+import dev.kraus.ERP.Repository.Clientes.ClientesRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import dev.kraus.ERP.Model.Clientes.Clientes;
@@ -13,10 +13,10 @@ import java.util.List;
 @Service
 public class clientesService {
 
-    private final clientesRepository clientesRepository;
+    private final ClientesRepository clientesRepository;
     private final ClientesServiceValidador clientesServiceValidador;
 
-    public clientesService(clientesRepository clientesRepository, ClientesServiceValidador clientesServiceValidador) {
+    public clientesService(ClientesRepository clientesRepository, ClientesServiceValidador clientesServiceValidador) {
         this.clientesRepository = clientesRepository;
         this.clientesServiceValidador = clientesServiceValidador;
     }

@@ -5,18 +5,23 @@ package dev.kraus.ERP.Config;
 import dev.kraus.ERP.Service.Usuarios.UsuariosService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SpringConfig {
 
     private final dev.kraus.ERP.Service.Usuarios.UsuariosService usuariosService;
+    private final ApiTokenAuthenticationFilter apiTokenAuthenticationFilter;
 
-    public SpringConfig(UsuariosService usuariosService) {
+    public SpringConfig(UsuariosService usuariosService, ApiTokenAuthenticationFilter apiTokenAuthenticationFilter) {
         this.usuariosService = usuariosService;
+        this.apiTokenAuthenticationFilter = apiTokenAuthenticationFilter;
     }
 
     @Bean
@@ -42,8 +47,11 @@ public class SpringConfig {
                             "/stripe/webhook"
                     ).permitAll();
 
-                    registry.requestMatchers("/api/**", "/stripe/webhook")
+                    registry.requestMatchers("/stripe/webhook")
                             .permitAll();
+
+                    registry.requestMatchers("/api/**")
+                            .authenticated();
 
                     registry.anyRequest()
                             .authenticated();
@@ -68,6 +76,13 @@ public class SpringConfig {
                 })
 
                 .userDetailsService(usuariosService)
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .defaultAuthenticationEntryPointFor(
+                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+                                request -> request.getRequestURI().startsWith("/api/")
+                        )
+                )
+                .addFilterBefore(apiTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .build();
     }

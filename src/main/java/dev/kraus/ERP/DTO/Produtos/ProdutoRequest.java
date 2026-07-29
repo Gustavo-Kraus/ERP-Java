@@ -9,9 +9,6 @@ import lombok.Setter;
 @Setter
 public class ProdutoRequest {
 
-    private String usuario;
-    private String senha;
-
     private String codigo;
     private String codigoBarras;
     private String nome;

@@ -2,16 +2,15 @@ package dev.kraus.ERP.Service.Clientes;
 
 
 import dev.kraus.ERP.Model.Clientes.Clientes;
-import dev.kraus.ERP.Model.Usuarios.Usuarios;
-import dev.kraus.ERP.Repository.Clientes.clientesRepository;
+import dev.kraus.ERP.Repository.Clientes.ClientesRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClientesServiceValidador {
 
-    private final clientesRepository clientesRepository;
+    private final ClientesRepository clientesRepository;
 
-    public ClientesServiceValidador(clientesRepository clientesRepository) {
+    public ClientesServiceValidador(ClientesRepository clientesRepository) {
         this.clientesRepository = clientesRepository;
     }
 

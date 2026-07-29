@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
-public interface clientesRepository extends JpaRepository<Clientes, Long> {
+public interface ClientesRepository extends JpaRepository<Clientes, Long> {
 
     List<Clientes> findByExcluidoEmIsNullOrderByCriadoEmDesc(Pageable pageable);
 
