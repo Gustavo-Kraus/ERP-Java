@@ -10,9 +10,9 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ProdutosException.class)
+    @ExceptionHandler(GlobalException.class)
     public ResponseEntity<?> produtoJaCadastrado(
-            ProdutosException ex
+            GlobalException ex
     ) {
 
         return ResponseEntity

@@ -25,6 +25,8 @@ public class ProdutosAPI {
         this.produtosServiceApi = produtosServiceApi;
     }
 
+
+
     @GetMapping("/listar")
     public ResponseEntity<?> listarProdutos(
             @RequestParam(value = "busca", required = false) String busca,
@@ -33,6 +35,20 @@ public class ProdutosAPI {
         return ResponseEntity.ok()
                 .body(produtosServiceApi.listarProdutos(busca, getUsuarioAutenticado(authentication)));
     }
+
+
+
+    @GetMapping("/listar/{id}")
+    public ResponseEntity<?> listarProdutosPorID(
+            @PathVariable Long id,
+            @RequestParam(value = "busca", required = false) String busca,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok()
+                .body(produtosServiceApi.listarProdutoPorID(id, getUsuarioAutenticado(authentication)));
+    }
+
+
 
     @PostMapping("/salvar")
     public ResponseEntity<?> salvar(
@@ -47,8 +63,7 @@ public class ProdutosAPI {
     @DeleteMapping("/apagar/{id}")
     public ResponseEntity<?> apagar(
             @PathVariable Long id,
-            Authentication authentication
-    ) {
+            Authentication authentication) {
         produtosServiceApi.deletarProdutos(id, getUsuarioAutenticado(authentication));
 
         return ResponseEntity.ok().body("Produto apagado com sucesso");

@@ -25,4 +25,10 @@ public interface ClientesRepository extends JpaRepository<Clientes, Long> {
         order by c.criadoEm desc
     """)
     List<Clientes> buscarAtivos(@Param("busca") String busca, Pageable pageable);
+
+    List<Clientes> findByExcluidoEmIsNullAndId(Long id);
+
+    List<Clientes> findByIdAndExcluidoEmIsNull(Long id);
+
+    boolean existsByIdAndExcluidoEmIsNull(Long id);
 }

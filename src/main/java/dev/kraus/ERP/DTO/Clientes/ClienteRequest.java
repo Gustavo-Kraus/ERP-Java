@@ -9,4 +9,5 @@ public class ClienteRequest {
 
 
     private String nome;
+    private String email;
 }
