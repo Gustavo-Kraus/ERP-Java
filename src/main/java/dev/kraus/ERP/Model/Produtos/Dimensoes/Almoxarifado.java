@@ -2,9 +2,13 @@ package dev.kraus.ERP.Model.Produtos.Dimensoes;
 
 import dev.kraus.ERP.Model.Filial.Filiais;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Table(name = "produtosCategoria")
+@Table(name = "almoxarifado")
 @Entity
+@Getter
+@Setter
 public class Almoxarifado {
 
     @Id

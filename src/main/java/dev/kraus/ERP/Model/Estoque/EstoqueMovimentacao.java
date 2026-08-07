@@ -1,7 +1,8 @@
-package dev.kraus.ERP.Model.Produtos;
+package dev.kraus.ERP.Model.Estoque;
 
 import dev.kraus.ERP.Model.Enums.Produtos.TipoMovimentacao;
 import dev.kraus.ERP.Model.Produtos.Dimensoes.Almoxarifado;
+import dev.kraus.ERP.Model.Produtos.Produtos;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 
 @Table(name = "movimentacao_estoque")
-public class MovimentacaoEstoque {
+public class EstoqueMovimentacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +48,7 @@ public class MovimentacaoEstoque {
     @ManyToOne
     private Usuarios usuario;
 
-    @Column(length = 100)
+    @Column(length = 500)
     private String documento;
 
     @Column(length = 500)

@@ -1,13 +1,16 @@
-package dev.kraus.ERP.Model.Produtos;
+package dev.kraus.ERP.Model.Estoque;
 
 import dev.kraus.ERP.Model.Produtos.Dimensoes.Almoxarifado;
+import dev.kraus.ERP.Model.Produtos.Produtos;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -16,7 +19,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 
 @Table(name = "produto_estoque")
-public class ProdutoEstoque {
+public class Estoque {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,4 +45,9 @@ public class ProdutoEstoque {
 
     @Column(precision = 15, scale = 3)
     private BigDecimal pontoReposicao;
+
+    @CreationTimestamp
+    private LocalDateTime criadoEm;
+
+    private LocalDateTime atualizadoEm;
 }
