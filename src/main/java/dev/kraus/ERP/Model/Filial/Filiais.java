@@ -2,10 +2,13 @@ package dev.kraus.ERP.Model.Filial;
 
 import dev.kraus.ERP.Model.Endereco.Endereco;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-
+@Setter
+@Getter
 @Entity
 @Table(name = "filiais")
 public class Filiais {

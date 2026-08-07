@@ -20,5 +20,4 @@ public class Almoxarifado {
 
     @ManyToOne(optional = false)
     private Filiais filiais;
-
 }
