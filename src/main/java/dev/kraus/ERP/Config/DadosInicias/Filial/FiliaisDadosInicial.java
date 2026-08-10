@@ -3,16 +3,14 @@ package dev.kraus.ERP.Config.DadosInicias.Filial;
 import dev.kraus.ERP.Model.Filial.Filiais;
 import dev.kraus.ERP.Repository.Filiais.FiliaisRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
-@Order(1)
-public class FiliaisDadosInicial {
+public class FiliaisDadosInicial implements ApplicationRunner {
 
     private final FiliaisRepository filiaisRepository;
 
@@ -20,24 +18,26 @@ public class FiliaisDadosInicial {
         this.filiaisRepository = filiaisRepository;
     }
 
+    @Override
     @Transactional
-    @EventListener(ApplicationReadyEvent.class)
-    public void iniciar() {
-
-
-        if (!filiaisRepository.existsById(1L)) {
-
-            Filiais filial = new Filiais();
-
-            filial.setAtivo(true);
-            filial.setCriadoEm(LocalDateTime.now());
-            filial.setCnpj("00000000000000");
-            filial.setCodigo("1");
-            filial.setMatriz(true);
-            filial.setNomeFantasia("Padrão");
-            filial.setRazaoSocial("Padrão");
-
-            filiaisRepository.save(filial);
+    public void run(ApplicationArguments args) {
+        if (filiaisRepository.existsById(1L)) {
+            System.out.println("Filial padrão já existe.");
+            return;
         }
+
+        Filiais filial = new Filiais();
+
+        filial.setAtivo(true);
+        filial.setCriadoEm(LocalDateTime.now());
+        filial.setCnpj("00000000000000");
+        filial.setCodigo("1");
+        filial.setMatriz(true);
+        filial.setNomeFantasia("Padrão");
+        filial.setRazaoSocial("Padrão");
+
+        Filiais salva = filiaisRepository.save(filial);
+
+        System.out.println("Filial criada. ID: " + salva.getId());
     }
 }
