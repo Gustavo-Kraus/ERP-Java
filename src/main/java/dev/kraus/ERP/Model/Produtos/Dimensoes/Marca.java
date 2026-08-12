@@ -1,9 +1,12 @@
 package dev.kraus.ERP.Model.Produtos.Dimensoes;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-
-@Table(name = "produtosCategoria")
+@Setter
+@Getter
+@Table(name = "produtosMarca")
 @Entity
 public class Marca {
 
