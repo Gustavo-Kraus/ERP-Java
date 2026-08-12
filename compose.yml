@@ -4,36 +4,56 @@ services:
     image: postgres:17
     container_name: erp_postgres
     restart: unless-stopped
-
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-
     ports:
       - "5432:5432"
-
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  postgres_test:
+    image: postgres:17
+    container_name: erp_postgres_test
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_TEST}
+      POSTGRES_USER: ${POSTGRES_USER_TEST}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_TEST}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-
     container_name: erp_java
     restart: unless-stopped
-
     depends_on:
       - postgres
-
     ports:
       - "8080:8080"
-
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
 
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: erp_java_test
+    depends_on:
+      - postgres_test
+    environment:
+      SPRING_PROFILES_ACTIVE: test
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_test:5432/${POSTGRES_DB_TEST}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER_TEST}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD_TEST}
+
 volumes:
   postgres_data:
+  postgres_test_data:
