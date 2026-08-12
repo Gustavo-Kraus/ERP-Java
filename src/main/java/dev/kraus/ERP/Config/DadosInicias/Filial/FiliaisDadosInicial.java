@@ -21,7 +21,7 @@ public class FiliaisDadosInicial implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        if (filiaisRepository.existsById(1L)) {
+        if (filiaisRepository.count() > 0) {
             System.out.println("Filial padrão já existe.");
             return;
         }

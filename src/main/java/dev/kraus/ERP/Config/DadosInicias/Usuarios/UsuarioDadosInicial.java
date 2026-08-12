@@ -25,7 +25,7 @@ public class UsuarioDadosInicial implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        if (usuariosRepository.existsById(1L)) {
+        if (usuariosRepository.count() > 0) {
             System.out.println("Usuário padrão já existe.");
             return;
         }

@@ -32,15 +32,15 @@ public class ProdutoDatasInicial implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        if (produtosRepository.existsById(1L)) {
+        if (produtosRepository.count() > 0) {
             System.out.println("Produto padrão já existe.");
             return;
         }
-        if (categoriaRepository.existsById(1L)) {
+        if (categoriaRepository.count()> 0) {
             System.out.println("Categoria padrão já existe.");
             return;
         }
-        if (marcaRepository.existsById(1L)) {
+        if (marcaRepository.count() > 0) {
             System.out.println("Marca padrão já existe.");
             return;
         }

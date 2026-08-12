@@ -19,7 +19,7 @@ public class ClienteDadosInicial implements ApplicationRunner{
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        if (clientesRepository.existsById(1L)) {
+        if (clientesRepository.count() > 0) {
             System.out.println("Cliente padrão já existe.");
             return;
         }
