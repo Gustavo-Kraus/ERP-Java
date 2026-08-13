@@ -4,12 +4,15 @@ package dev.kraus.ERP.Controller.API.Estoque;
 import dev.kraus.ERP.DTO.Estoque.EstoqueRequest;
 import dev.kraus.ERP.DTO.Estoque.EstoqueRequestAtt;
 import dev.kraus.ERP.DTO.Estoque.EstoqueRequestMEA;
+import dev.kraus.ERP.DTO.Estoque.EstoqueResponse;
 import dev.kraus.ERP.Model.Estoque.Estoque;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import dev.kraus.ERP.ServiceAPI.Estoque.EstoqueServiceAPI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/estoque")
@@ -42,7 +45,7 @@ public class EstoqueAPI {
     }
 
 
-    @PostMapping("/atualizarQTD")
+    @PostMapping("/atualizarqtd")
     public ResponseEntity<?> atualizarEstoque(
             @RequestBody EstoqueRequestAtt request,
             Authentication authentication
@@ -58,6 +61,16 @@ public class EstoqueAPI {
     ) {
         Estoque estoqueTransferencia = estoqueServiceAPI.transferenciaEstoque(requestMEA, getUsuarioAutenticado(authentication));
         return ResponseEntity.ok(estoqueTransferencia);
+    }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<EstoqueResponse>> listarEstoque(
+            Authentication authentication
+    ) {
+        List<EstoqueResponse> estoqueListar =
+                estoqueServiceAPI.listarEstoque(getUsuarioAutenticado(authentication));
+
+        return ResponseEntity.ok(estoqueListar);
     }
 
 

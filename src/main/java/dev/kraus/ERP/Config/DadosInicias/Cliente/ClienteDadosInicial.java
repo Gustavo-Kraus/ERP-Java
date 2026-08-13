@@ -20,18 +20,16 @@ public class ClienteDadosInicial implements ApplicationRunner{
     @Transactional
     public void run(ApplicationArguments args) {
         if (clientesRepository.count() > 0) {
-            System.out.println("Cliente padrão já existe.");
             return;
         }
         Long documento = 00000000000L;
-        while (clientesRepository.count() < 50) {
+        while (clientesRepository.count() < 5000) {
             Clientes clientes = new Clientes();
             clientes.setNome("Padrão");
             clientes.setCnpjCpf(String.valueOf(documento));
             clientes.setNomeFantasia("Padrão");
             clientes.setRazaoSocial("Padrão");
             Clientes salva = clientesRepository.save(clientes);
-            System.out.println("Cliente criado. ID: " + salva.getId());
             documento++;
         }
     }

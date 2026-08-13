@@ -5,6 +5,7 @@ import dev.kraus.ERP.Controller.API.RespostaErros.GlobalException;
 import dev.kraus.ERP.DTO.Estoque.EstoqueRequest;
 import dev.kraus.ERP.DTO.Estoque.EstoqueRequestAtt;
 import dev.kraus.ERP.DTO.Estoque.EstoqueRequestMEA;
+import dev.kraus.ERP.DTO.Estoque.EstoqueResponse;
 import dev.kraus.ERP.Model.Enums.Produtos.TipoMovimentacao;
 import dev.kraus.ERP.Model.Estoque.Estoque;
 import dev.kraus.ERP.Model.Estoque.EstoqueMovimentacao;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.security.PublicKey;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EstoqueServiceAPI {
@@ -50,6 +52,11 @@ public class EstoqueServiceAPI {
         Almoxarifado almoxarifado = almoxarifadoRepository.findById(request.getAlmoxarifado())
                 .orElseThrow(() -> new GlobalException("Almoxarifado não encontrado"));
 
+        if (estoqueRepository.existsByProdutoAndAlmoxarifado(produto, almoxarifado)) {
+            throw new GlobalException(
+                    "Já existe um estoque para este produto neste almoxarifado"
+            );
+        }
         Estoque estoque = new Estoque();
 
         estoque.setProduto(produto);
@@ -178,6 +185,23 @@ public class EstoqueServiceAPI {
         estoqueMovimentacaoRepository.save(movimentacao);
 
         return estoqueDestino;
+    }
+
+    public List<EstoqueResponse> listarEstoque(Usuarios usuarios){
+        validarUsuario(usuarios);
+        return estoqueRepository.findAll()
+                .stream()
+                .map(estoque -> new EstoqueResponse(
+                        estoque.getId(),
+                        estoque.getQuantidadeAtual(),
+                        estoque.getQuantidadeReservada(),
+                        estoque.getEstoqueMinimo(),
+                        estoque.getEstoqueMaximo(),
+                        estoque.getPontoReposicao(),
+                        estoque.getCriadoEm(),
+                        estoque.getAtualizadoEm()
+                ))
+                .toList();
     }
 
 

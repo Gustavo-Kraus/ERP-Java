@@ -3,6 +3,7 @@ package dev.kraus.ERP.ServiceAPI.Clientes;
 
 import dev.kraus.ERP.Controller.API.RespostaErros.GlobalException;
 import dev.kraus.ERP.DTO.Clientes.ClienteRequest;
+import dev.kraus.ERP.DTO.Clientes.ClienteResponse;
 import dev.kraus.ERP.Mapper.Clientes.ClienteMapper;
 import dev.kraus.ERP.Model.Clientes.Clientes;
 import dev.kraus.ERP.Model.Produtos.Produtos;
@@ -27,16 +28,28 @@ public class ClientesServiceAPI {
         this.mapper = mapper;
     }
 
-    public List<Clientes> listarClientes(String busca, Usuarios usuario) {
+    public List<ClienteResponse> listarClientes(Usuarios usuario) {
         validarUsuario(usuario);
-
-        Pageable limite = PageRequest.of(0, 6);
-
-        if (busca == null || busca.isBlank()) {
-            return clientesRepository.findByExcluidoEmIsNullOrderByCriadoEmDesc(limite);
-        }
-
-        return clientesRepository.buscarAtivos(busca.trim(), limite);
+        return clientesRepository.findAll()
+                .stream()
+                .map( clientes -> new ClienteResponse(
+                        clientes.getId(),
+                        clientes.getNome(),
+                        clientes.getNomeFantasia(),
+                        clientes.getRazaoSocial(),
+                        clientes.getCnpjCpf(),
+                        clientes.getTelefone(),
+                        clientes.getCelular(),
+                        clientes.getEmail(),
+                        clientes.getNumeroCasa(),
+                        clientes.getBairro(),
+                        clientes.getCep(),
+                        clientes.getRua(),
+                        clientes.getCriadoEm(),
+                        clientes.getEditadoEm(),
+                        clientes.getExcluidoEm()
+                ))
+                .toList();
     }
 
     public Clientes listarClientePorID(Long id, Usuarios usuario) {

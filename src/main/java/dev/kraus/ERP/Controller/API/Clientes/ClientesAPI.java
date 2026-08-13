@@ -1,12 +1,15 @@
 package dev.kraus.ERP.Controller.API.Clientes;
 
 import dev.kraus.ERP.DTO.Clientes.ClienteRequest;
+import dev.kraus.ERP.DTO.Clientes.ClienteResponse;
 import dev.kraus.ERP.Model.Clientes.Clientes;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import dev.kraus.ERP.ServiceAPI.Clientes.ClientesServiceAPI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -19,12 +22,15 @@ public class ClientesAPI {
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<?> listarClientes(
-            @RequestParam(value = "busca", required = false) String busca,
+    public ResponseEntity<List<ClienteResponse>> listarClientes(
             Authentication authentication
     ) {
-        return ResponseEntity.ok()
-                .body(clientesServiceAPI.listarClientes(busca, getUsuarioAutenticado(authentication)));
+        List<ClienteResponse> clientesListar =
+                clientesServiceAPI.listarClientes(
+                        getUsuarioAutenticado(authentication)
+                );
+
+        return ResponseEntity.ok(clientesListar);
     }
 
     @GetMapping("/listar/{id}")
