@@ -2,8 +2,10 @@ services:
 
   postgres:
     image: postgres:17
+    mem_limit: 1g
+    cpus: 2.0
     container_name: erp_postgres
-    restart: unless-stopped
+    restart: "no"
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -15,8 +17,10 @@ services:
 
   postgres_test:
     image: postgres:17
+    mem_limit: 1g
+    cpus: 0.5
     container_name: erp_postgres_test
-    restart: unless-stopped
+    restart: "no"
     environment:
       POSTGRES_DB: ${POSTGRES_DB_TEST}
       POSTGRES_USER: ${POSTGRES_USER_TEST}
@@ -31,15 +35,18 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: erp_java
-    restart: unless-stopped
+    restart: "no"
     depends_on:
       - postgres
     ports:
       - "8080:8080"
+    mem_limit: 1g
+    cpus: 2.0
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx768m"
 
   test:
     build:
@@ -48,11 +55,14 @@ services:
     container_name: erp_java_test
     depends_on:
       - postgres_test
+    mem_limit: 768m
+    cpus: 1.0
     environment:
       SPRING_PROFILES_ACTIVE: test
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_test:5432/${POSTGRES_DB_TEST}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER_TEST}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD_TEST}
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx512m"
 
 volumes:
   postgres_data:

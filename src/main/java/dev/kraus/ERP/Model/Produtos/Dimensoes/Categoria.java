@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@Table(name = "produtosCategoria")
+@Table(name = "produtos_categoria")
 @Entity
 public class Categoria {
 
