@@ -66,7 +66,6 @@ public class ProdutoDatasInicial implements ApplicationRunner {
             produtos.setDescricao("Produto padrão");
             produtos.setAtivo(true);
             Produtos produtoSalvo = produtosRepository.save(produtos);
-            System.out.println("Produto criado. ID: " + produtoSalvo.getId());
             codigoincremento++;
         }
 

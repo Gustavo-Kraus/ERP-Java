@@ -8,6 +8,7 @@ import dev.kraus.ERP.Repository.Estoque.EstoqueRepository;
 import dev.kraus.ERP.Repository.Produtos.Dimensoes.AlmoxarifadoRepository;
 import dev.kraus.ERP.Repository.Produtos.ProdutosRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -27,9 +28,17 @@ public class EstoqueDadosInicial {
         this.almoxarifadoRepository = almoxarifadoRepository;
     }
 
+    //aqui eu puxo se está como modo desenvoledor ativo, se tiver o if vai impedir de gerar novas linhas
+    @Value("${developer-mode}")
+    private boolean modoDesenvolvedor;
+
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
     public void iniciar() {
+        if (!modoDesenvolvedor) {
+            System.out.println("Modo produção detectado. Não será criado usuário padrão.");
+            return;
+        }
         if (estoqueRepository.count() > 0) {
             System.out.println("Estoque já existe. Inicialização finalizada.");
             return;
@@ -60,7 +69,6 @@ public class EstoqueDadosInicial {
         estoque.setQuantidadeAtual(new BigDecimal("100.000"));
         estoque.setQuantidadeReservada(new BigDecimal("00.000"));
         estoqueRepository.save(estoque);
-        System.out.println("Estoque padrão criado com sucesso. ID: " + estoque.getId());
 
     }
 }

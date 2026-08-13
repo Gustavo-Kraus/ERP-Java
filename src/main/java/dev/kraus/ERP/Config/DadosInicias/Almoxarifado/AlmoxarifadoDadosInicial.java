@@ -5,6 +5,7 @@ import dev.kraus.ERP.Model.Produtos.Dimensoes.Almoxarifado;
 import dev.kraus.ERP.Repository.Filiais.FiliaisRepository;
 import dev.kraus.ERP.Repository.Produtos.Dimensoes.AlmoxarifadoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -23,9 +24,18 @@ public class AlmoxarifadoDadosInicial {
         this.filiaisRepository = filiaisRepository;
     }
 
+    //aqui eu puxo se está como modo desenvoledor ativo, se tiver o if vai impedir de gerar novas linhas
+    @Value("${developer-mode}")
+    private boolean modoDesenvolvedor;
+
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
     public void iniciar() {
+
+        if (!modoDesenvolvedor) {
+            System.out.println("Modo produção detectado. Não será criado Almoxarifado padrão.");
+            return;
+        }
 
         if (almoxarifadoRepository.count() > 0) {
             System.out.println("Almoxarifado já existe. Inicialização finalizada.");
@@ -48,10 +58,5 @@ public class AlmoxarifadoDadosInicial {
 
         Almoxarifado almoxarifadoSalvo =
                 almoxarifadoRepository.save(almoxarifado);
-
-        System.out.println(
-                "Almoxarifado padrão criado com sucesso. ID: "
-                        + almoxarifadoSalvo.getId()
-        );
     }
 }

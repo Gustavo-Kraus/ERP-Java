@@ -3,6 +3,7 @@ package dev.kraus.ERP.Config.DadosInicias.Cliente;
 import dev.kraus.ERP.Model.Clientes.Clientes;
 import dev.kraus.ERP.Repository.Clientes.ClientesRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -16,9 +17,16 @@ public class ClienteDadosInicial implements ApplicationRunner{
         this.clientesRepository = clientesRepository;
     }
 
+    //aqui eu puxo se está como modo desenvoledor ativo, se tiver o if vai impedir de gerar novas linhas
+    @Value("${developer-mode}")
+    private boolean modoDesenvolvedor;
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
+        if (!modoDesenvolvedor) {
+            System.out.println("Modo produção detectado. Não será criado usuário padrão.");
+            return;
+        }
         if (clientesRepository.count() > 0) {
             return;
         }

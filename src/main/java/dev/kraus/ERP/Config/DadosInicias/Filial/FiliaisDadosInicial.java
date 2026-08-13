@@ -3,6 +3,7 @@ package dev.kraus.ERP.Config.DadosInicias.Filial;
 import dev.kraus.ERP.Model.Filial.Filiais;
 import dev.kraus.ERP.Repository.Filiais.FiliaisRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -18,9 +19,17 @@ public class FiliaisDadosInicial implements ApplicationRunner {
         this.filiaisRepository = filiaisRepository;
     }
 
+    //aqui eu puxo se está como modo desenvoledor ativo, se tiver o if vai impedir de gerar novas linhas
+    @Value("${developer-mode}")
+    private boolean modoDesenvolvedor;
+
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
+        if (!modoDesenvolvedor) {
+            System.out.println("Modo produção detectado. Não será criado usuário padrão.");
+            return;
+        }
         if (filiaisRepository.count() > 0) {
             System.out.println("Filial padrão já existe.");
             return;
@@ -37,7 +46,5 @@ public class FiliaisDadosInicial implements ApplicationRunner {
         filial.setRazaoSocial("Padrão");
 
         Filiais salva = filiaisRepository.save(filial);
-
-        System.out.println("Filial criada. ID: " + salva.getId());
     }
 }

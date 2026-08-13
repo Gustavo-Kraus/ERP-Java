@@ -23,6 +23,4 @@ public interface ProdutosRepository extends JpaRepository<Produtos, Long> {
     List<Produtos> buscarAtivos(@Param("busca") String busca, Pageable pageable);
 
     boolean existsByCodigoOrCodigoBarras(String codigo, String codigoBarras);
-
-    boolean findByIf(Long produto);
 }
