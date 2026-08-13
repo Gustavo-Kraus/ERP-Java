@@ -37,8 +37,17 @@ Atualmente, o projeto utiliza principalmente:
 Outras tecnologias e bibliotecas podem ser adicionadas conforme o desenvolvimento do projeto.
 
 ---
+## Documentação da API
 
-## 🐳 Como executar
+A API do ERP possui uma collection no Postman com os endpoints disponíveis para consulta, testes e desenvolvimento.
+
+A collection é atualizada conforme novos endpoints e funcionalidades são implementados.
+
+👉 **[Acessar documentação da API no Postman](https://www.postman.com/gustavokrauss-team/workspace/erp-java/collection/26896146-6e81010b-94e7-4d7c-b19b-dc36a65a3f90)**
+
+---
+
+## Como executar
 
 Para executar o projeto localmente, você precisa ter o **Docker** e o **Docker Compose** instalados.
 
