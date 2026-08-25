@@ -21,4 +21,11 @@ public class GlobalExceptionHandler {
                         "erro", ex.getMessage()
                 ));
     }
+
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+    public ResponseEntity<?> requisicaoInvalida(RuntimeException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(Map.of("erro", ex.getMessage()));
+    }
 }

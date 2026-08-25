@@ -68,6 +68,8 @@ public class EstoqueDadosInicial {
         estoque.setPontoReposicao(new BigDecimal("100.000"));
         estoque.setQuantidadeAtual(new BigDecimal("100.000"));
         estoque.setQuantidadeReservada(new BigDecimal("00.000"));
+        estoque.setPrecoCusto(new BigDecimal("10.00"));
+        estoque.setPrecoVenda(new BigDecimal("15.00"));
         estoqueRepository.save(estoque);
 
     }

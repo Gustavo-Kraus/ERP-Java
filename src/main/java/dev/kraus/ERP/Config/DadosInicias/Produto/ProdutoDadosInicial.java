@@ -12,17 +12,18 @@ import dev.kraus.ERP.Repository.Produtos.ProdutosRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProdutoDatasInicial implements ApplicationRunner {
+public class ProdutoDadosInicial implements ApplicationRunner {
 
 
     private final ProdutosRepository produtosRepository;
     private final MarcaRepository marcaRepository;
     private final CategoriaRepository categoriaRepository;
 
-    public ProdutoDatasInicial(ProdutosRepository produtosRepository, MarcaRepository marcaRepository, CategoriaRepository categoriaRepository) {
+    public ProdutoDadosInicial(ProdutosRepository produtosRepository, MarcaRepository marcaRepository, CategoriaRepository categoriaRepository) {
         this.produtosRepository = produtosRepository;
         this.marcaRepository = marcaRepository;
         this.categoriaRepository = categoriaRepository;

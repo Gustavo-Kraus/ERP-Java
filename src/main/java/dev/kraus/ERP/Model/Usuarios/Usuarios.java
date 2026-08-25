@@ -1,6 +1,7 @@
 package dev.kraus.ERP.Model.Usuarios;
 
 
+import dev.kraus.ERP.Model.Filial.Filiais;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -55,6 +56,9 @@ public class Usuarios implements UserDetails {
 
     @Column(nullable = false)
     public String role = "USER";
+
+    @ManyToOne(optional = false)
+    private Filiais filiais;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

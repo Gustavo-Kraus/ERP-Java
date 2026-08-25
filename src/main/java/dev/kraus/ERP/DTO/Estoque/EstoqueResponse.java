@@ -10,6 +10,8 @@ public record EstoqueResponse(
         BigDecimal estoqueMinimo,
         BigDecimal estoqueMaximo,
         BigDecimal pontoReposicao,
+        BigDecimal precoCusto,
+        BigDecimal precoVenda,
         LocalDateTime criadoEm,
         LocalDateTime atualizadoEm
 ) {}

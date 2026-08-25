@@ -20,9 +20,10 @@ public class EstoqueRequest {
     private BigDecimal estoqueMinimo;
     private BigDecimal estoqueMaximo;
     private BigDecimal pontoReposicao;
+    private BigDecimal precoCusto;
+    private BigDecimal precoVenda;
     private String atualizar;
 
 
 
 }
-

@@ -46,8 +46,25 @@ public class Estoque {
     @Column(precision = 15, scale = 3)
     private BigDecimal pontoReposicao;
 
+    @Column(precision = 15, scale = 2)
+    private BigDecimal precoCusto = BigDecimal.ZERO;
+
+    @Column(precision = 15, scale = 2)
+    private BigDecimal precoVenda = BigDecimal.ZERO;
+
     @CreationTimestamp
     private LocalDateTime criadoEm;
 
     private LocalDateTime atualizadoEm;
+
+    @PrePersist
+    @PreUpdate
+    private void preencherPrecosPadrao() {
+        if (precoCusto == null) {
+            precoCusto = BigDecimal.ZERO;
+        }
+        if (precoVenda == null) {
+            precoVenda = BigDecimal.ZERO;
+        }
+    }
 }

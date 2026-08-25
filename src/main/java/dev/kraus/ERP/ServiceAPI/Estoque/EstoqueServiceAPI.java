@@ -66,6 +66,8 @@ public class EstoqueServiceAPI {
         estoque.setEstoqueMaximo(request.getEstoqueMaximo());
         estoque.setEstoqueMinimo(request.getEstoqueMinimo());
         estoque.setPontoReposicao(request.getPontoReposicao());
+        estoque.setPrecoCusto(valorOuZero(request.getPrecoCusto()));
+        estoque.setPrecoVenda(valorOuZero(request.getPrecoVenda()));
         estoque.setAtualizadoEm(LocalDateTime.now());
         return estoqueRepository.save(estoque);
     }
@@ -90,6 +92,8 @@ public class EstoqueServiceAPI {
                     estoque.setEstoqueMaximo(request.getEstoqueMaximo());
                     estoque.setEstoqueMinimo(request.getEstoqueMinimo());
                     estoque.setPontoReposicao(request.getPontoReposicao());
+                    estoque.setPrecoCusto(valorOuZero(request.getPrecoCusto()));
+                    estoque.setPrecoVenda(valorOuZero(request.getPrecoVenda()));
                     estoque.setAtualizadoEm(LocalDateTime.now());
 
                     return estoqueRepository.save(estoque);
@@ -198,6 +202,8 @@ public class EstoqueServiceAPI {
                         estoque.getEstoqueMinimo(),
                         estoque.getEstoqueMaximo(),
                         estoque.getPontoReposicao(),
+                        estoque.getPrecoCusto(),
+                        estoque.getPrecoVenda(),
                         estoque.getCriadoEm(),
                         estoque.getAtualizadoEm()
                 ))
@@ -209,6 +215,10 @@ public class EstoqueServiceAPI {
         if (usuario == null || !usuario.isEnabled()) {
             throw new GlobalException("Usuario autenticado invalido");
         }
+    }
+
+    private BigDecimal valorOuZero(BigDecimal valor) {
+        return valor == null ? BigDecimal.ZERO : valor;
     }
 
 }
