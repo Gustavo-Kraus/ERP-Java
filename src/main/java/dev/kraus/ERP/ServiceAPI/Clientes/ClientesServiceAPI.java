@@ -6,12 +6,10 @@ import dev.kraus.ERP.DTO.Clientes.ClienteRequest;
 import dev.kraus.ERP.DTO.Clientes.ClienteResponse;
 import dev.kraus.ERP.Mapper.Clientes.ClienteMapper;
 import dev.kraus.ERP.Model.Clientes.Clientes;
-import dev.kraus.ERP.Model.Produtos.Produtos;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import dev.kraus.ERP.Repository.Clientes.ClientesRepository;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.oauth2.client.endpoint.RestClientTokenExchangeTokenResponseClient;
+import dev.kraus.ERP.Repository.Permissoes.RestringeAcessoRepository;
+import dev.kraus.ERP.ServiceAPI.Permissoes.PermissoesServiceClientes;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,17 +20,24 @@ public class ClientesServiceAPI {
 
     private final ClientesRepository clientesRepository;
     private final ClienteMapper mapper;
+    private final RestringeAcessoRepository restringeAcessoRepository;
+    private final PermissoesServiceClientes permissoesServiceClientes;
 
-    public ClientesServiceAPI(ClientesRepository clientesRepository, ClienteMapper mapper) {
+    public ClientesServiceAPI(ClientesRepository clientesRepository, ClienteMapper mapper, RestringeAcessoRepository restringeAcessoRepository, PermissoesServiceClientes permissoesServiceClientes) {
         this.clientesRepository = clientesRepository;
         this.mapper = mapper;
+        this.restringeAcessoRepository = restringeAcessoRepository;
+        this.permissoesServiceClientes = permissoesServiceClientes;
     }
 
     public List<ClienteResponse> listarClientes(Usuarios usuario) {
+
+        permissoesServiceClientes.verificarPodeListarCliente(usuario);
         validarUsuario(usuario);
+
         return clientesRepository.findAll()
                 .stream()
-                .map( clientes -> new ClienteResponse(
+                .map(clientes -> new ClienteResponse(
                         clientes.getId(),
                         clientes.getNome(),
                         clientes.getNomeFantasia(),
@@ -55,11 +60,14 @@ public class ClientesServiceAPI {
     public Clientes listarClientePorID(Long id, Usuarios usuario) {
         validarUsuario(usuario);
 
+
+
         return clientesRepository.findById(id)
                 .orElseThrow(() -> new GlobalException("Cliente nao encontrado"));
     }
 
     public Clientes salvarCliente(ClienteRequest request, Usuarios usuarios){
+        permissoesServiceClientes.verificarPodeCadastrarCliente(usuarios);
         validarUsuario(usuarios);
         Clientes clientes = mapper.toEntity(request);
 
@@ -109,7 +117,6 @@ public class ClientesServiceAPI {
                 })
                 .orElseThrow(() -> new GlobalException("Cliente nao encontrado"));
     }
-
 
 
     private void validarUsuario(Usuarios usuario) {
