@@ -1,4 +1,4 @@
-package dev.kraus.ERP.Model.Permissoes;
+package dev.kraus.ERP.Model.Permissoes.Clientes;
 
 
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name= "permissoes_usuarios")
-public class RestringeAcesso {
+@Table(name= "permissoes_usuarios_clientes")
+public class RestringeAcessoClientes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

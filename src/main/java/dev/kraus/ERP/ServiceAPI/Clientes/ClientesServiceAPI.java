@@ -58,10 +58,8 @@ public class ClientesServiceAPI {
     }
 
     public Clientes listarClientePorID(Long id, Usuarios usuario) {
+        permissoesServiceClientes.verificarPodeListarCliente(usuario);
         validarUsuario(usuario);
-
-
-
         return clientesRepository.findById(id)
                 .orElseThrow(() -> new GlobalException("Cliente nao encontrado"));
     }
@@ -79,9 +77,8 @@ public class ClientesServiceAPI {
     }
 
     public Clientes deletarCliente(Long id, Usuarios usuario) {
+        permissoesServiceClientes.verificarPodeExcluirCliente(usuario);
         validarUsuario(usuario);
-
-
         Clientes clientes = clientesRepository.findById(id)
                 .orElseThrow(() -> new GlobalException("Cliente nao encontrado"));
 
@@ -95,6 +92,7 @@ public class ClientesServiceAPI {
     }
 
     public Clientes atualizarCliente(Long id, ClienteRequest request ,Usuarios usuarios){
+        permissoesServiceClientes.verificarPodeEditarCliente(usuarios);
         validarUsuario(usuarios);
 
         if (request.getNome() == null || request.getNome().isBlank()) {

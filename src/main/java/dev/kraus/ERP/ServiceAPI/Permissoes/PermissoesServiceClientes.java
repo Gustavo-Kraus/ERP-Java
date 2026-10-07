@@ -1,7 +1,7 @@
 package dev.kraus.ERP.ServiceAPI.Permissoes;
 
 import dev.kraus.ERP.Controller.API.RespostaErros.GlobalException;
-import dev.kraus.ERP.Model.Permissoes.RestringeAcesso;
+import dev.kraus.ERP.Model.Permissoes.Clientes.RestringeAcessoClientes;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import dev.kraus.ERP.Repository.Permissoes.RestringeAcessoRepository;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class PermissoesServiceClientes {
 
         boolean podeListar = repository
                 .findByUsuario(usuario)
-                .map(RestringeAcesso::isPodeListarCliente)
+                .map(RestringeAcessoClientes::isPodeListarCliente)
                 .orElse(false);
 
         if (!podeListar) {
@@ -34,12 +34,38 @@ public class PermissoesServiceClientes {
 
         boolean podeCadastrar = repository
                 .findByUsuario(usuario)
-                .map(RestringeAcesso::isPodeCadastrarCliente)
+                .map(RestringeAcessoClientes::isPodeCadastrarCliente)
                 .orElse(false);
 
         if (!podeCadastrar) {
             throw new GlobalException(
                     "Usuário não possui permissão para cadastrar clientes"
+            );
+        }
+    }
+
+    public void verificarPodeExcluirCliente(Usuarios usuarios){
+        boolean podeExcluir = repository
+                .findByUsuario(usuarios)
+                .map(RestringeAcessoClientes::isPodeExcluirCliente)
+                .orElse(false);
+
+        if (!podeExcluir) {
+            throw new GlobalException(
+                    "Usuário não possui permissão para excluir clientes"
+            );
+        }
+    }
+
+    public void verificarPodeEditarCliente(Usuarios usuarios){
+        boolean podeEditar = repository
+                .findByUsuario(usuarios)
+                .map(RestringeAcessoClientes::isPodeEditarCliente)
+                .orElse(false);
+
+        if (!podeEditar) {
+            throw new GlobalException(
+                    "Usuário não possui permissão para editar clientes"
             );
         }
     }
