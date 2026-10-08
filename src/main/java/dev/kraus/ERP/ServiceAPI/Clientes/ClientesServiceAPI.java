@@ -8,8 +8,9 @@ import dev.kraus.ERP.Mapper.Clientes.ClienteMapper;
 import dev.kraus.ERP.Model.Clientes.Clientes;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import dev.kraus.ERP.Repository.Clientes.ClientesRepository;
-import dev.kraus.ERP.Repository.Permissoes.RestringeAcessoRepository;
+import dev.kraus.ERP.ServiceAPI.Cache.Clientes.ClientesCacheService;
 import dev.kraus.ERP.ServiceAPI.Permissoes.PermissoesServiceClientes;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,14 +21,14 @@ public class ClientesServiceAPI {
 
     private final ClientesRepository clientesRepository;
     private final ClienteMapper mapper;
-    private final RestringeAcessoRepository restringeAcessoRepository;
     private final PermissoesServiceClientes permissoesServiceClientes;
+    private final ClientesCacheService clientesCacheService;
 
-    public ClientesServiceAPI(ClientesRepository clientesRepository, ClienteMapper mapper, RestringeAcessoRepository restringeAcessoRepository, PermissoesServiceClientes permissoesServiceClientes) {
+    public ClientesServiceAPI(ClientesRepository clientesRepository, ClienteMapper mapper, PermissoesServiceClientes permissoesServiceClientes, ClientesCacheService clientesCacheService) {
         this.clientesRepository = clientesRepository;
         this.mapper = mapper;
-        this.restringeAcessoRepository = restringeAcessoRepository;
         this.permissoesServiceClientes = permissoesServiceClientes;
+        this.clientesCacheService = clientesCacheService;
     }
 
     public List<ClienteResponse> listarClientes(Usuarios usuario) {
@@ -35,26 +36,7 @@ public class ClientesServiceAPI {
         permissoesServiceClientes.verificarPodeListarCliente(usuario);
         validarUsuario(usuario);
 
-        return clientesRepository.findAll()
-                .stream()
-                .map(clientes -> new ClienteResponse(
-                        clientes.getId(),
-                        clientes.getNome(),
-                        clientes.getNomeFantasia(),
-                        clientes.getRazaoSocial(),
-                        clientes.getCnpjCpf(),
-                        clientes.getTelefone(),
-                        clientes.getCelular(),
-                        clientes.getEmail(),
-                        clientes.getNumeroCasa(),
-                        clientes.getBairro(),
-                        clientes.getCep(),
-                        clientes.getRua(),
-                        clientes.getCriadoEm(),
-                        clientes.getEditadoEm(),
-                        clientes.getExcluidoEm()
-                ))
-                .toList();
+        return clientesCacheService.listarClientes();
     }
 
     public Clientes listarClientePorID(Long id, Usuarios usuario) {
@@ -64,6 +46,7 @@ public class ClientesServiceAPI {
                 .orElseThrow(() -> new GlobalException("Cliente nao encontrado"));
     }
 
+    @CacheEvict(cacheNames = "clientes", allEntries = true)
     public Clientes salvarCliente(ClienteRequest request, Usuarios usuarios){
         permissoesServiceClientes.verificarPodeCadastrarCliente(usuarios);
         validarUsuario(usuarios);
@@ -76,6 +59,7 @@ public class ClientesServiceAPI {
 
     }
 
+    @CacheEvict(cacheNames = "clientes", allEntries = true)
     public Clientes deletarCliente(Long id, Usuarios usuario) {
         permissoesServiceClientes.verificarPodeExcluirCliente(usuario);
         validarUsuario(usuario);
@@ -91,6 +75,7 @@ public class ClientesServiceAPI {
         return clientesRepository.save(clientes);
     }
 
+    @CacheEvict(cacheNames = "clientes", allEntries = true)
     public Clientes atualizarCliente(Long id, ClienteRequest request ,Usuarios usuarios){
         permissoesServiceClientes.verificarPodeEditarCliente(usuarios);
         validarUsuario(usuarios);
