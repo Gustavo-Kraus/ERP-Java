@@ -5,9 +5,11 @@ import dev.kraus.ERP.DTO.Clientes.ClienteResponse;
 import dev.kraus.ERP.Model.Clientes.Clientes;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import dev.kraus.ERP.ServiceAPI.Clientes.ClientesServiceAPI;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 
 import java.util.List;
 
@@ -22,7 +24,8 @@ public class ClientesAPI {
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<List<ClienteResponse>> listarClientes(
+    @RateLimiter(name = "listarClientesApi", fallbackMethod = "fallback")
+    public ResponseEntity<?> listarClientes(
             Authentication authentication
     ) {
         List<ClienteResponse> clientesListar =
@@ -78,6 +81,13 @@ public class ClientesAPI {
 
 
 
+    public ResponseEntity<?> fallback(
+            Authentication authentication,
+            RequestNotPermitted ex
+    ) {
+        return ResponseEntity.status(429)
+                .body("porque tanta conexão? agora fica bloquado por 30s ai");
+    }
 
 
     private Usuarios getUsuarioAutenticado(Authentication authentication) {
