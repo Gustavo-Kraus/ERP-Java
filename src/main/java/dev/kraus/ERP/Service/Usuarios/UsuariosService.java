@@ -58,6 +58,17 @@ public class UsuariosService implements UserDetailsService {
         return saved;
     }
 
+    public Optional<Usuarios> autenticarCredenciais(String email, String senha) {
+        if (email == null || email.isBlank() || senha == null) {
+            return Optional.empty();
+        }
+
+        return usuariosRepository.findByEmail(email)
+                .filter(Usuarios::isEnabled)
+                .filter(usuario -> usuario.getSenha() != null
+                        && passwordEncoder.matches(senha, usuario.getSenha()));
+    }
+
     //aqui é onde o usuário é carregado a partir do email, para ser utilizado na autenticação do Spring Security
 
     @Override

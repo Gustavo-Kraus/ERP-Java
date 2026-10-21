@@ -9,7 +9,7 @@ import dev.kraus.ERP.Model.Clientes.Clientes;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import dev.kraus.ERP.Repository.Clientes.ClientesRepository;
 import dev.kraus.ERP.ServiceAPI.Cache.Clientes.ClientesCacheService;
-import dev.kraus.ERP.ServiceAPI.Permissoes.PermissoesServiceClientes;
+import dev.kraus.ERP.ServiceAPI.Permissoes.Clientes.PermissoesServiceClientes;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 

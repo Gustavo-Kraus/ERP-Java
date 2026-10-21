@@ -14,6 +14,7 @@ import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import dev.kraus.ERP.Repository.Clientes.ClientesRepository;
 import dev.kraus.ERP.Repository.Estoque.EstoqueRepository;
 import dev.kraus.ERP.Repository.Pedidos.PedidoRepository;
+import dev.kraus.ERP.ServiceAPI.Permissoes.Pedidos.PermissoesServicePedidos;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +27,18 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final ClientesRepository clientesRepository;
     private final EstoqueRepository estoqueRepository;
+    private final PermissoesServicePedidos permissoesServicePedidos;
 
     public PedidoService(
             PedidoRepository pedidoRepository,
             ClientesRepository clientesRepository,
-            EstoqueRepository estoqueRepository
+            EstoqueRepository estoqueRepository,
+            PermissoesServicePedidos permissoesServicePedidos
     ) {
         this.pedidoRepository = pedidoRepository;
         this.clientesRepository = clientesRepository;
         this.estoqueRepository = estoqueRepository;
+        this.permissoesServicePedidos = permissoesServicePedidos;
     }
 
     @Transactional
@@ -42,6 +46,8 @@ public class PedidoService {
             PedidoRequest request,
             Usuarios usuario
     ) {
+        permissoesServicePedidos.verificarPodeCriarPedido(usuario);
+        validarUsuario(usuario);
         Filiais filial = usuario.getFiliais();
 
         if (filial == null) {
@@ -78,6 +84,7 @@ public class PedidoService {
     }
 
     public List<PedidoResponse> listarPedidos(Usuarios usuario) {
+        permissoesServicePedidos.verificarPodeListarPedido(usuario);
         validarUsuario(usuario);
         return pedidoRepository.findAllByFilialIdOrderByDataCriacaoDesc(usuario.getFiliais().getId())
                 .stream()
@@ -87,6 +94,7 @@ public class PedidoService {
 
     @Transactional
     public PedidoResponse editarPedido(Long id, PedidoRequest request, Usuarios usuario) {
+        permissoesServicePedidos.verificarPodeEditarPedido(usuario);
         validarUsuario(usuario);
         Pedido pedido = buscarPedidoDaFilial(id, usuario);
 
@@ -103,6 +111,7 @@ public class PedidoService {
 
     @Transactional
     public void excluirPedido(Long id, Usuarios usuario) {
+        permissoesServicePedidos.verificarPodeExcluirPedido(usuario);
         validarUsuario(usuario);
         pedidoRepository.delete(buscarPedidoDaFilial(id, usuario));
     }

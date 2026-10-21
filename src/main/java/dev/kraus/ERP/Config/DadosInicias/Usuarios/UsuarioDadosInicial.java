@@ -21,11 +21,13 @@ public class UsuarioDadosInicial {
     private final UsuariosRepository usuariosRepository;
     private final ApiTokenService apiTokenService;
     private final FiliaisRepository filiaisRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UsuarioDadosInicial(UsuariosRepository usuariosRepository, ApiTokenService apiTokenService, FiliaisRepository filiaisRepository) {
+    public UsuarioDadosInicial(UsuariosRepository usuariosRepository, ApiTokenService apiTokenService, FiliaisRepository filiaisRepository, BCryptPasswordEncoder passwordEncoder) {
         this.usuariosRepository = usuariosRepository;
         this.apiTokenService = apiTokenService;
         this.filiaisRepository = filiaisRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     //aqui eu puxo se está como modo desenvoledor ativo, se tiver o if vai impedir de gerar novas linhas
@@ -58,14 +60,25 @@ public class UsuarioDadosInicial {
 
         Usuarios usuarios = new Usuarios();
         usuarios.setNome("admin");
-        usuarios.setSenha("1234");
+        usuarios.setSenha(passwordEncoder.encode("1234"));
         usuarios.setEmail("teste@test.com");
         usuarios.setRole("ADMIN");
         usuarios.setFiliais(filial);
         Usuarios usuarioSalvo = usuariosRepository.save(usuarios);
-        System.out.println("Usuário padrão criado com sucesso: " + usuarioSalvo.getEmail() + " e senha: " + usuarioSalvo.getSenha());
+        System.out.println("Usuário padrão criado com sucesso: " + usuarioSalvo.getEmail());
 
-        ApiToken apiToken = apiTokenService.gerarToken(usuarioSalvo);
-        System.out.println("Token gerado para o usuário: " + apiToken.getToken());
+        ApiToken apiTokenAdmin = apiTokenService.gerarToken(usuarioSalvo);
+        System.out.println("Token gerado para o usuário: " + apiTokenAdmin.getToken());
+
+        Usuarios usuariosTest = new Usuarios();
+        usuariosTest.setNome("test");
+        usuariosTest.setSenha(passwordEncoder.encode("1234"));
+        usuariosTest.setEmail("teste2@test.com");
+        usuariosTest.setFiliais(filial);
+        Usuarios usuarioSalvoTest = usuariosRepository.save(usuariosTest);
+        System.out.println("Usuário padrão criado com sucesso: " + usuarioSalvoTest.getEmail());
+
+        ApiToken apiToken = apiTokenService.gerarToken(usuarioSalvoTest);
+        System.out.println("Token gerado para o usuário teste2: " + apiToken.getToken());
     }
 }

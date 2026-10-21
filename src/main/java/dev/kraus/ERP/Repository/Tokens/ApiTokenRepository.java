@@ -16,6 +16,7 @@ public interface ApiTokenRepository extends JpaRepository<ApiToken, Long> {
             join fetch t.usuario
             where t.token = :token
               and t.revogadoEm is null
+              and (t.expiraEm is null or t.expiraEm > CURRENT_TIMESTAMP)
             """)
     Optional<ApiToken> findAtivoByToken(@Param("token") String token);
 

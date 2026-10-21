@@ -32,6 +32,8 @@ public class ApiToken {
     @CreationTimestamp
     private LocalDateTime criadoEm;
 
+    private LocalDateTime expiraEm;
+
     private LocalDateTime revogadoEm;
 
     public Long getId() {
@@ -56,6 +58,14 @@ public class ApiToken {
 
     public LocalDateTime getCriadoEm() {
         return criadoEm;
+    }
+
+    public LocalDateTime getExpiraEm() {
+        return expiraEm;
+    }
+
+    public void setExpiraEm(LocalDateTime expiraEm) {
+        this.expiraEm = expiraEm;
     }
 
     public LocalDateTime getRevogadoEm() {

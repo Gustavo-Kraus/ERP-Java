@@ -6,6 +6,7 @@ import dev.kraus.ERP.Repository.Tokens.ApiTokenRepository;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +22,14 @@ public class ApiTokenService {
     }
 
     public ApiToken gerarToken(Usuarios usuario) {
+        return gerarToken(usuario, null);
+    }
+
+    public ApiToken gerarToken(Usuarios usuario, LocalDateTime expiraEm) {
         ApiToken apiToken = new ApiToken();
         apiToken.setUsuario(usuario);
         apiToken.setToken(gerarValorToken());
+        apiToken.setExpiraEm(expiraEm);
         return apiTokenRepository.save(apiToken);
     }
 

@@ -3,10 +3,10 @@ package dev.kraus.ERP.ServiceAPI.Produtos;
 import dev.kraus.ERP.Controller.API.RespostaErros.GlobalException;
 import dev.kraus.ERP.DTO.Produtos.ProdutoRequest;
 import dev.kraus.ERP.Mapper.Produtos.ProdutoMapper;
-import dev.kraus.ERP.Model.Clientes.Clientes;
 import dev.kraus.ERP.Model.Produtos.Produtos;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import dev.kraus.ERP.Repository.Produtos.ProdutosRepository;
+import dev.kraus.ERP.ServiceAPI.Permissoes.Produtos.PermissoesServiceProdutos;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,13 +19,20 @@ public class ProdutosServiceAPI {
 
     private final ProdutosRepository produtosRepository;
     private final ProdutoMapper mapper;
+    private final PermissoesServiceProdutos permissoesServiceProdutos;
 
-    public ProdutosServiceAPI(ProdutosRepository produtosRepository, ProdutoMapper mapper) {
+    public ProdutosServiceAPI(
+            ProdutosRepository produtosRepository,
+            ProdutoMapper mapper,
+            PermissoesServiceProdutos permissoesServiceProdutos
+    ) {
         this.produtosRepository = produtosRepository;
         this.mapper = mapper;
+        this.permissoesServiceProdutos = permissoesServiceProdutos;
     }
 
     public List<Produtos> listarProdutos(String busca, Usuarios usuario) {
+        permissoesServiceProdutos.verificarPodeListarProduto(usuario);
         validarUsuario(usuario);
 
         Pageable limite = PageRequest.of(0, 6);
@@ -38,6 +45,7 @@ public class ProdutosServiceAPI {
     }
 
     public Produtos salvarProduto(ProdutoRequest request, Usuarios usuario) {
+        permissoesServiceProdutos.verificarPodeCadastrarProduto(usuario);
         validarUsuario(usuario);
 
         Produtos produto = mapper.toEntity(request);
@@ -69,6 +77,7 @@ public class ProdutosServiceAPI {
     }
 
     public Produtos deletarProdutos(Long id, Usuarios usuario) {
+        permissoesServiceProdutos.verificarPodeExcluirProduto(usuario);
         validarUsuario(usuario);
 
         Produtos produtos = produtosRepository.findById(id)
@@ -79,6 +88,7 @@ public class ProdutosServiceAPI {
     }
 
     public Produtos listarProdutoPorID(Long id, Usuarios usuario) {
+        permissoesServiceProdutos.verificarPodeListarProduto(usuario);
         validarUsuario(usuario);
 
         return produtosRepository.findById(id)

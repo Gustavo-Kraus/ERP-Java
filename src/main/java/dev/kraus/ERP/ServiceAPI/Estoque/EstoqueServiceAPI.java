@@ -16,11 +16,11 @@ import dev.kraus.ERP.Repository.Estoque.EstoqueMovimentacaoRepository;
 import dev.kraus.ERP.Repository.Estoque.EstoqueRepository;
 import dev.kraus.ERP.Repository.Produtos.Dimensoes.AlmoxarifadoRepository;
 import dev.kraus.ERP.Repository.Produtos.ProdutosRepository;
+import dev.kraus.ERP.ServiceAPI.Permissoes.Estoque.PermissoesServiceEstoque;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,15 +31,24 @@ public class EstoqueServiceAPI {
     private final EstoqueMovimentacaoRepository estoqueMovimentacaoRepository;
     private final ProdutosRepository produtosRepository;
     private final AlmoxarifadoRepository almoxarifadoRepository;
+    private final PermissoesServiceEstoque permissoesServiceEstoque;
 
-    public EstoqueServiceAPI(EstoqueRepository estoqueRepository, EstoqueMovimentacaoRepository estoqueMovimentacaoRepository, ProdutosRepository produtosRepository, AlmoxarifadoRepository almoxarifadoRepository) {
+    public EstoqueServiceAPI(
+            EstoqueRepository estoqueRepository,
+            EstoqueMovimentacaoRepository estoqueMovimentacaoRepository,
+            ProdutosRepository produtosRepository,
+            AlmoxarifadoRepository almoxarifadoRepository,
+            PermissoesServiceEstoque permissoesServiceEstoque
+    ) {
         this.estoqueRepository = estoqueRepository;
         this.estoqueMovimentacaoRepository = estoqueMovimentacaoRepository;
         this.produtosRepository = produtosRepository;
         this.almoxarifadoRepository = almoxarifadoRepository;
+        this.permissoesServiceEstoque = permissoesServiceEstoque;
     }
 
     public Estoque salvarEstoque(EstoqueRequest request, Usuarios usuarios) {
+        permissoesServiceEstoque.verificarPodeCadastrarEstoque(usuarios);
         validarUsuario(usuarios);
 
         if (request.getProduto() == null) {
@@ -73,6 +82,7 @@ public class EstoqueServiceAPI {
     }
 
     public Estoque atualizarEstoque(Long id ,EstoqueRequest request, Usuarios usuarios){
+        permissoesServiceEstoque.verificarPodeAtualizarEstoque(usuarios);
         validarUsuario(usuarios);
         EstoqueMovimentacao movimentacao = new EstoqueMovimentacao();
 
@@ -102,6 +112,7 @@ public class EstoqueServiceAPI {
     }
 
     public Estoque atualizarQuantidadeEstoque(EstoqueRequestAtt requestAtt, Usuarios usuarios) {
+        permissoesServiceEstoque.verificarPodeAtualizarQuantidadeEstoque(usuarios);
         validarUsuario(usuarios);
 
         EstoqueMovimentacao movimentacao = new EstoqueMovimentacao();
@@ -141,6 +152,7 @@ public class EstoqueServiceAPI {
     //mandar de um almoxarifado para o outro
     @Transactional
     public Estoque transferenciaEstoque(EstoqueRequestMEA requestMEA, Usuarios usuario) {
+        permissoesServiceEstoque.verificarPodeTransferirEstoque(usuario);
         validarUsuario(usuario);
 
         Estoque estoqueOrigem = estoqueRepository.findById(requestMEA.getIdEstoqueOrigem())
@@ -192,6 +204,7 @@ public class EstoqueServiceAPI {
     }
 
     public List<EstoqueResponse> listarEstoque(Usuarios usuarios){
+        permissoesServiceEstoque.verificarPodeListarEstoque(usuarios);
         validarUsuario(usuarios);
         return estoqueRepository.findAll()
                 .stream()

@@ -1,4 +1,4 @@
-package dev.kraus.ERP.ServiceAPI.Permissoes;
+package dev.kraus.ERP.ServiceAPI.Permissoes.Clientes;
 
 import dev.kraus.ERP.Controller.API.RespostaErros.GlobalException;
 import dev.kraus.ERP.Model.Permissoes.Clientes.RestringeAcessoClientes;
@@ -17,6 +17,9 @@ public class PermissoesServiceClientes {
     }
 
     public void verificarPodeListarCliente(Usuarios usuario) {
+        if (isAdmin(usuario)) {
+            return;
+        }
 
         boolean podeListar = repository
                 .findByUsuario(usuario)
@@ -31,6 +34,9 @@ public class PermissoesServiceClientes {
     }
 
     public void verificarPodeCadastrarCliente(Usuarios usuario) {
+        if (isAdmin(usuario)) {
+            return;
+        }
 
         boolean podeCadastrar = repository
                 .findByUsuario(usuario)
@@ -45,6 +51,10 @@ public class PermissoesServiceClientes {
     }
 
     public void verificarPodeExcluirCliente(Usuarios usuarios){
+        if (isAdmin(usuarios)) {
+            return;
+        }
+
         boolean podeExcluir = repository
                 .findByUsuario(usuarios)
                 .map(RestringeAcessoClientes::isPodeExcluirCliente)
@@ -58,6 +68,10 @@ public class PermissoesServiceClientes {
     }
 
     public void verificarPodeEditarCliente(Usuarios usuarios){
+        if (isAdmin(usuarios)) {
+            return;
+        }
+
         boolean podeEditar = repository
                 .findByUsuario(usuarios)
                 .map(RestringeAcessoClientes::isPodeEditarCliente)
@@ -68,5 +82,11 @@ public class PermissoesServiceClientes {
                     "Usuário não possui permissão para editar clientes"
             );
         }
+    }
+
+    private boolean isAdmin(Usuarios usuario) {
+        return usuario != null
+                && usuario.getRole() != null
+                && usuario.getRole().equalsIgnoreCase("ADMIN");
     }
 }

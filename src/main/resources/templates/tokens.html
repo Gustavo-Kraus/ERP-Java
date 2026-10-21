@@ -53,6 +53,7 @@
                     <th>ID</th>
                     <th>Token</th>
                     <th>Criado em</th>
+                    <th>Expira em</th>
                     <th>Revogado em</th>
                 </tr>
                 </thead>
@@ -61,6 +62,7 @@
                     <td th:text="${token.id}"></td>
                     <td th:text="${token.token}"></td>
                     <td th:text="${token.criadoEm}"></td>
+                    <td th:text="${token.expiraEm} ?: 'Permanente'"></td>
                     <td th:text="${token.revogadoEm} ?: '-'"></td>
                 </tr>
                 </tbody>
