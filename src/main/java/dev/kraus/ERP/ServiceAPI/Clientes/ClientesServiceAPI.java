@@ -46,7 +46,7 @@ public class ClientesServiceAPI {
                 .orElseThrow(() -> new GlobalException("Cliente nao encontrado"));
     }
 
-    @CacheEvict(cacheNames = "clientes", allEntries = true)
+    @CacheEvict(cacheNames = "clientes", allEntries = true)//aqui bloqueia o cache
     public Clientes salvarCliente(ClienteRequest request, Usuarios usuarios){
         permissoesServiceClientes.verificarPodeCadastrarCliente(usuarios);
         validarUsuario(usuarios);
@@ -59,7 +59,7 @@ public class ClientesServiceAPI {
 
     }
 
-    @CacheEvict(cacheNames = "clientes", allEntries = true)
+    @CacheEvict(cacheNames = "clientes", allEntries = true) //aqui bloqueia o cache
     public Clientes deletarCliente(Long id, Usuarios usuario) {
         permissoesServiceClientes.verificarPodeExcluirCliente(usuario);
         validarUsuario(usuario);
@@ -75,7 +75,7 @@ public class ClientesServiceAPI {
         return clientesRepository.save(clientes);
     }
 
-    @CacheEvict(cacheNames = "clientes", allEntries = true)
+    @CacheEvict(cacheNames = "clientes", allEntries = true)//aqui bloqueia o cache
     public Clientes atualizarCliente(Long id, ClienteRequest request ,Usuarios usuarios){
         permissoesServiceClientes.verificarPodeEditarCliente(usuarios);
         validarUsuario(usuarios);
