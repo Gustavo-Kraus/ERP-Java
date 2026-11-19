@@ -13,7 +13,7 @@ public class ClienteMapper {
         Clientes clientes = new Clientes();
 
         clientes.setNome(request.getNome());
-
+        clientes.setEmail(request.getEmail());
 
         return clientes;
     }

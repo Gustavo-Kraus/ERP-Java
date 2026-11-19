@@ -10,6 +10,11 @@ import java.util.List;
 
 public interface ProdutosRepository extends JpaRepository<Produtos, Long> {
 
+    @Query("""
+        select p from Produtos p
+        where p.desativadoEm is null
+        order by p.criadoEm desc nulls last
+    """)
     List<Produtos> findByDesativadoEmIsNullOrderByCriadoEmDesc(Pageable pageable);
 
     @Query("""
@@ -18,7 +23,7 @@ public interface ProdutosRepository extends JpaRepository<Produtos, Long> {
           and (
             lower(coalesce(p.nome, '')) like lower(concat('%', :busca, '%'))
           )
-        order by p.criadoEm desc
+        order by p.criadoEm desc nulls last
     """)
     List<Produtos> buscarAtivos(@Param("busca") String busca, Pageable pageable);
 

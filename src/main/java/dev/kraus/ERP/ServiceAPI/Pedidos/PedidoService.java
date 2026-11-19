@@ -19,6 +19,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,6 +58,7 @@ public class PedidoService {
         }
 
         Clientes cliente = buscarCliente(request.clienteId());
+        List<PedidoItem> itens = criarItens(request);
         Pedido pedido = new Pedido();
 
         pedido.setUsuario(usuario);
@@ -78,8 +80,9 @@ public class PedidoService {
         );
 
         pedido.setObservacao(request.observacao());
-        adicionarItens(pedido, request);
-        calcularTotais(pedido);
+        calcularTotais(pedido, itens, pedido.getDesconto(), pedido.getAcrescimo());
+        pedidoRepository.saveAndFlush(pedido);
+        adicionarItens(pedido, itens);
         return pedidoRepository.save(pedido);
     }
 
@@ -98,13 +101,18 @@ public class PedidoService {
         validarUsuario(usuario);
         Pedido pedido = buscarPedidoDaFilial(id, usuario);
 
-        pedido.setCliente(buscarCliente(request.clienteId()));
-        pedido.setDesconto(valorOuZero(request.desconto()));
-        pedido.setAcrescimo(valorOuZero(request.acrescimo()));
+        Clientes cliente = buscarCliente(request.clienteId());
+        List<PedidoItem> itens = criarItens(request);
+        BigDecimal desconto = valorOuZero(request.desconto());
+        BigDecimal acrescimo = valorOuZero(request.acrescimo());
+        calcularTotais(pedido, itens, desconto, acrescimo);
+
+        pedido.setCliente(cliente);
+        pedido.setDesconto(desconto);
+        pedido.setAcrescimo(acrescimo);
         pedido.setObservacao(request.observacao());
         pedido.getItens().clear();
-        adicionarItens(pedido, request);
-        calcularTotais(pedido);
+        adicionarItens(pedido, itens);
 
         return paraResponse(pedidoRepository.save(pedido));
     }
@@ -116,11 +124,12 @@ public class PedidoService {
         pedidoRepository.delete(buscarPedidoDaFilial(id, usuario));
     }
 
-    private void adicionarItens(Pedido pedido, PedidoRequest request) {
+    private List<PedidoItem> criarItens(PedidoRequest request) {
         if (request.itens() == null || request.itens().isEmpty()) {
             throw new IllegalArgumentException("O pedido deve possuir ao menos um item.");
         }
 
+        List<PedidoItem> itens = new ArrayList<>();
         for (PedidoItemRequest itemRequest : request.itens()) {
             Estoque estoque = buscarEstoque(itemRequest.estoqueId());
             validarQuantidade(itemRequest.quantidade());
@@ -131,7 +140,6 @@ public class PedidoService {
             validarPreco(preco);
 
             PedidoItem item = new PedidoItem();
-            item.setPedido(pedido);
             item.setEstoque(estoque);
             item.setProduto(estoque.getProduto());
             item.setQuantidade(itemRequest.quantidade());
@@ -146,22 +154,33 @@ public class PedidoService {
             }
 
             item.setTotal(total);
+            itens.add(item);
+        }
+        return itens;
+    }
+
+    private void adicionarItens(Pedido pedido, List<PedidoItem> itens) {
+        for (PedidoItem item : itens) {
+            item.setPedido(pedido);
             pedido.getItens().add(item);
         }
     }
 
-    private void calcularTotais(Pedido pedido) {
+    private void calcularTotais(
+            Pedido pedido,
+            List<PedidoItem> itens,
+            BigDecimal desconto,
+            BigDecimal acrescimo
+    ) {
 
-        BigDecimal subtotal = pedido.getItens()
+        BigDecimal subtotal = itens
                 .stream()
                 .map(PedidoItem::getTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        pedido.setSubtotal(subtotal);
-
         BigDecimal total = subtotal
-                .subtract(pedido.getDesconto())
-                .add(pedido.getAcrescimo());
+                .subtract(desconto)
+                .add(acrescimo);
 
         if (total.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException(
@@ -169,6 +188,7 @@ public class PedidoService {
             );
         }
 
+        pedido.setSubtotal(subtotal);
         pedido.setTotal(total);
     }
 

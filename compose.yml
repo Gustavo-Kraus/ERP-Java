@@ -76,6 +76,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_test:5432/${POSTGRES_DB_TEST}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER_TEST}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD_TEST}
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
       JAVA_TOOL_OPTIONS: "-Xms128m -Xmx512m"
 
 volumes:

@@ -1,9 +1,9 @@
 package dev.kraus.ERP.ServiceAPI.Permissoes.Clientes;
 
-import dev.kraus.ERP.Controller.API.RespostaErros.GlobalException;
 import dev.kraus.ERP.Model.Permissoes.Clientes.RestringeAcessoClientes;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import dev.kraus.ERP.Repository.Permissoes.RestringeAcessoRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 
@@ -27,7 +27,7 @@ public class PermissoesServiceClientes {
                 .orElse(false);
 
         if (!podeListar) {
-            throw new GlobalException(
+            throw new AccessDeniedException(
                     "Usuário não possui permissão para listar clientes"
             );
         }
@@ -44,7 +44,7 @@ public class PermissoesServiceClientes {
                 .orElse(false);
 
         if (!podeCadastrar) {
-            throw new GlobalException(
+            throw new AccessDeniedException(
                     "Usuário não possui permissão para cadastrar clientes"
             );
         }
@@ -61,7 +61,7 @@ public class PermissoesServiceClientes {
                 .orElse(false);
 
         if (!podeExcluir) {
-            throw new GlobalException(
+            throw new AccessDeniedException(
                     "Usuário não possui permissão para excluir clientes"
             );
         }
@@ -78,7 +78,7 @@ public class PermissoesServiceClientes {
                 .orElse(false);
 
         if (!podeEditar) {
-            throw new GlobalException(
+            throw new AccessDeniedException(
                     "Usuário não possui permissão para editar clientes"
             );
         }

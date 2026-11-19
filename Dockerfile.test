@@ -11,4 +11,4 @@ RUN ./mvnw dependency:go-offline
 
 COPY src src
 
-CMD ["./mvnw", "-Dtest=ClientesAPITest", "test"]
+CMD ["./mvnw", "test"]

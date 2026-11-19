@@ -1,9 +1,9 @@
 package dev.kraus.ERP.ServiceAPI.Permissoes.Estoque;
 
-import dev.kraus.ERP.Controller.API.RespostaErros.GlobalException;
 import dev.kraus.ERP.Model.Permissoes.Estoque.RestringeAcessoEstoque;
 import dev.kraus.ERP.Model.Usuarios.Usuarios;
 import dev.kraus.ERP.Repository.Permissoes.RestringeAcessoEstoqueRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Predicate;
@@ -51,7 +51,7 @@ public class PermissoesServiceEstoque {
                 && (isAdmin(usuario)
                 || repository.findByUsuario(usuario).filter(permissao).isPresent());
         if (!permitido) {
-            throw new GlobalException(mensagem);
+            throw new AccessDeniedException(mensagem);
         }
     }
 
