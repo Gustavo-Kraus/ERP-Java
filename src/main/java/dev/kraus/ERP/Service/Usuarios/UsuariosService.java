@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -25,20 +24,6 @@ public class UsuariosService implements UserDetailsService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-
-    //aqui é onde o usuário é salvo no banco de dados, utilizando as informações do token de autenticação do Google
-
-    public Usuarios salvar(OAuth2AuthenticationToken token){
-            String email = token.getPrincipal().getAttribute("email");
-            String nome = token.getPrincipal().getAttribute("name");
-
-            Optional<Usuarios> usuarioExistente = usuariosRepository.findByEmail(email);
-
-            Usuarios usuarios = usuarioExistente.orElseGet(Usuarios::new);
-            usuarios.setNome(nome);
-            usuarios.setEmail(email);
-        return usuariosRepository.save(usuarios);
-    }
 
     //aqui ele salva caso nao seja pelo google
 

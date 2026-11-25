@@ -8,9 +8,7 @@ Opa, pessoal!
 
 Este é um projeto de **ERP desenvolvido do zero em Java**, utilizando **Spring Boot** e diversas bibliotecas do ecossistema Java, sem usar **IA** para o desenvolvimento!.
 
-A ideia principal do projeto é construir uma aplicação empresarial completa, passando por todas as etapas do desenvolvimento: modelagem do banco de dados, regras de negócio, APIs, autenticação, testes, Docker, filas e, futuramente, um frontend independente.
-
-Atualmente, o frontend utiliza Thymeleaf, mas o objetivo futuro é desenvolver uma interface totalmente independente utilizando React ou outra tecnologia que atenda às necessidades do projeto.
+A ideia principal do projeto é construir uma aplicação empresarial completa, passando por todas as etapas do desenvolvimento: modelagem do banco de dados, regras de negócio, APIs, autenticação, testes, Docker e filas.
 
 O projeto também tem como objetivo servir como experiência prática de desenvolvimento de software, arquitetura, boas práticas e integração entre diferentes tecnologias.
 
@@ -27,7 +25,6 @@ Atualmente, o projeto utiliza principalmente:
 * **Spring Data JPA**
 * **Spring Security**
 * **PostgreSQL**
-* **Thymeleaf**
 * **Maven**
 * **Docker**
 * **Docker Compose**
@@ -158,14 +155,6 @@ O projeto está em desenvolvimento e novas funcionalidades serão adicionadas gr
 * [ ] Melhorias na documentação da API
 * [ ] Expansão dos módulos do ERP
 
-### Frontend
-
-* [x] Interface inicial com Thymeleaf
-* [ ] Melhorias na interface
-* [ ] Desenvolvimento de API REST completa
-* [ ] Frontend independente
-* [ ] Migração para React ou outra tecnologia adequada
-
 ### Infraestrutura
 
 * [x] Docker
@@ -188,7 +177,6 @@ Se você quiser ajudar no desenvolvimento, pode:
 * Criar ou melhorar testes;
 * Melhorar a documentação;
 * Desenvolver novas funcionalidades;
-* Sugerir melhorias no frontend;
 * Abrir Pull Requests.
 
 Se quiser participar diretamente do desenvolvimento, fique à vontade para entrar em contato.

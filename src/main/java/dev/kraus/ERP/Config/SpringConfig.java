@@ -9,7 +9,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -36,18 +35,6 @@ public class SpringConfig {
 
                 .authorizeHttpRequests(registry -> {
 
-                    registry.requestMatchers(
-                            "/login",
-                            "/css/**",
-                            "/js/**",
-                            "/images/**",
-                            "/favicon.ico",
-                            "/error",
-                            "/oauth2/**",
-                            "/login/oauth2/**",
-                            "/stripe/webhook"
-                    ).permitAll();
-
                     registry.requestMatchers("/stripe/webhook")
                             .permitAll();
 
@@ -66,24 +53,6 @@ public class SpringConfig {
 
                     registry.anyRequest()
                             .authenticated();
-                })
-
-                .formLogin(formLogin -> {
-
-                    formLogin.loginPage("/login")
-                            .defaultSuccessUrl("/main", true)
-                            .failureUrl("/login?error=true");
-                })
-
-                .oauth2Login(oauth2Login -> {
-
-                    oauth2Login.loginPage("/login")
-                            .successHandler((request, response, authentication) -> {
-                                if (authentication instanceof OAuth2AuthenticationToken oauth2Token) {
-                                    usuariosService.salvar(oauth2Token);
-                                }
-                                response.sendRedirect("/main");
-                            });
                 })
 
                 .userDetailsService(usuariosService)
