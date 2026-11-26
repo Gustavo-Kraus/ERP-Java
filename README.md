@@ -25,6 +25,7 @@ Atualmente, o projeto utiliza principalmente:
 * **Spring Data JPA**
 * **Spring Security**
 * **PostgreSQL**
+* **Monitoramento de CPU e memória heap da JVM**
 * **Maven**
 * **Docker**
 * **Docker Compose**
@@ -110,6 +111,8 @@ O projeto utiliza **PostgreSQL** como banco de dados principal.
 A configuração do banco já está integrada ao ambiente Docker, portanto não é necessário instalar o PostgreSQL diretamente na máquina para executar o projeto.
 
 Durante a inicialização, o sistema também possui configurações para criação de dados iniciais, permitindo executar e testar a aplicação sem precisar cadastrar manualmente todos os dados necessários.
+
+O sistema registra a cada minuto o uso de CPU do processo Java e os valores de memória heap e não heap usada, comprometida e máxima na tabela `metricas_jvm`. As medições são mantidas sem expurgo automático.
 
 ---
 
